@@ -1,8 +1,0 @@
-*.class
-*.properties
-*.jar
-*.war
-*.ear
-DDNS_Tool.iml
-DDNS_Tool.ipr
-DDNS_Tool.iws
