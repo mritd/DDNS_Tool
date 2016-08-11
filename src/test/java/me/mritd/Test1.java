@@ -21,14 +21,15 @@ import java.util.List;
  */
 
 public class Test1 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClientException {
         String cfg[] = {"-c","/Users/mritd/tmp/dns.properties"};
         PropertiesUtil.setConfPath(cfg);
+        PropertiesUtil.loadConfig();
 
 
         // 阿里云 API 固定值
         String regionId = "cn-hangzhou"; //必填固定值，必须为“cn-hanghou”
-        String myIP = "114.114.114.114";
+        String myIP = "114.114.114.115";
         String domainName = PropertiesUtil.getValue("domain");
         String accessKey = PropertiesUtil.getValue("Aliyun_AccessKey");
         String accessKeySecret = PropertiesUtil.getValue("Aliyun_AccessKeySecret");
@@ -37,13 +38,17 @@ public class Test1 {
         // DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", "Alidns", "alidns.aliyuncs.com");
         IAcsClient client = new DefaultAcsClient(profile);
 
+        DescribeDomainRecordsRequest describeDomainRecordsRequest = new DescribeDomainRecordsRequest();
+        describeDomainRecordsRequest.setDomainName(domainName);
+        DescribeDomainRecordsResponse describeDomainRecordsResponse = client.getAcsResponse(describeDomainRecordsRequest);
 
-        DescribeSubDomainRecordsRequest request = new DescribeSubDomainRecordsRequest();
-        DescribeSubDomainRecordsResponse response;
-        request.setProtocol(ProtocolType.HTTPS); //指定访问协议
-        request.setAcceptFormat(FormatType.JSON); //指定api返回格式
-        request.setSubDomain(domainName);
-        request.setMethod(MethodType.POST); //指定请求方法
+
+//        DescribeSubDomainRecordsRequest request = new DescribeSubDomainRecordsRequest();
+//        DescribeSubDomainRecordsResponse response;
+//        request.setProtocol(ProtocolType.HTTPS); //指定访问协议
+//        request.setAcceptFormat(FormatType.JSON); //指定api返回格式
+//        request.setSubDomain(domainName);
+//        request.setMethod(MethodType.POST); //指定请求方法
 
         UpdateDomainRecordRequest updateRequest = new UpdateDomainRecordRequest();
         UpdateDomainRecordResponse updateResponse;
@@ -54,9 +59,9 @@ public class Test1 {
         updateRequest.setType("A");
 
         try {
-            response = client.getAcsResponse(request);
-            List<DescribeSubDomainRecordsResponse.Record> records = response.getDomainRecords();
-            for (DescribeSubDomainRecordsResponse.Record record:records) {
+//            response = client.getAcsResponse(request);
+            List<DescribeDomainRecordsResponse.Record> records = describeDomainRecordsResponse.getDomainRecords();
+            for (DescribeDomainRecordsResponse.Record record:records) {
 
                 if (!myIP.equals(record.getValue())){
                     updateRequest.setRecordId(record.getRecordId());

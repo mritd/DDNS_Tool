@@ -10,13 +10,13 @@ public interface UpdateDomainRecord {
 
     /**
      * 更新 域名解析 记录
-     * @param domain
-     * @param type
-     * @param ip
-     * @param accessKey
-     * @param accessKeySecret
-     * @return
+     * @param domain 更新域名
+     * @param type 域名类型
+     * @param ip 更新IP
+     * @param accessKey key
+     * @param accessKeySecret keySecret
+     * @return boolean 更新结果
      */
-    public boolean doUpdate(String domain,String type , String ip ,String accessKey, String accessKeySecret);
+    boolean doUpdate(String domain, String type, String ip, String accessKey, String accessKeySecret);
 
 }

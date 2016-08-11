@@ -18,7 +18,7 @@ import java.net.URLConnection;
  * Created by mritd on 16/7/31 14:31.
  */
 
-public class UpdateDomainListener implements JobListener{
+public class UpdateDomainListener implements JobListener {
 
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateDomainListener.class);
@@ -29,7 +29,7 @@ public class UpdateDomainListener implements JobListener{
 
     public void jobToBeExecuted(JobExecutionContext jobExecutionContext) {
 
-        JobDataMap dataMap =  jobExecutionContext.getJobDetail().getJobDataMap();
+        JobDataMap dataMap = jobExecutionContext.getJobDetail().getJobDataMap();
 
         logger.info("更新域名解析记录开始...");
 
@@ -54,37 +54,37 @@ public class UpdateDomainListener implements JobListener{
             }
             int start = webContent.indexOf("[") + 1;
             int end = webContent.indexOf("]");
-            myIP =  webContent.substring(start, end);
+            myIP = webContent.substring(start, end);
         } catch (UnsupportedEncodingException e) {
-            logger.error("不支持的字符集: ",e);
+            logger.error("不支持的字符集: ", e);
         } catch (IOException e) {
-            logger.error("获取当前 IP 出现 I/O 异常: ",e);
+            logger.error("获取当前 IP 出现 I/O 异常: ", e);
         } finally {
             if (ins != null) {
                 try {
                     ins.close();
                 } catch (IOException e) {
-                    logger.error("资源释放失败: ",e);
+                    logger.error("资源释放失败: ", e);
                 }
             }
         }
 
-        logger.info("当前 IP 为: "+myIP);
+        logger.info("当前 IP 为: " + myIP);
         logger.info("获取域名服务商相关配置...");
 
         String configType = PropertiesUtil.getValue("useConfig");
 
-        dataMap.put("myIP",myIP);
-        dataMap.put("domainType",PropertiesUtil.getValue("domainType"));
-        dataMap.put("domain",PropertiesUtil.getValue("domain"));
-        dataMap.put("AccessKey", PropertiesUtil.getValue(configType+"_AccessKey"));
-        dataMap.put("AccessKeySecret", PropertiesUtil.getValue(configType+"_AccessKeySecret"));
+        dataMap.put("myIP", myIP);
+        dataMap.put("domainType", PropertiesUtil.getValue("domainType"));
+        dataMap.put("domain", PropertiesUtil.getValue("domain"));
+        dataMap.put("AccessKey", PropertiesUtil.getValue(configType + "_AccessKey"));
+        dataMap.put("AccessKeySecret", PropertiesUtil.getValue(configType + "_AccessKeySecret"));
 
         try {
-            Class clazz = Class.forName(configType+"UpdateDomainRecord");
-            dataMap.put("updateDomainRecord",clazz.newInstance());
+            Class clazz = Class.forName("me.mritd.ddns.impl." + configType + "UpdateDomainRecord");
+            dataMap.put("updateDomainRecord", clazz.newInstance());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            logger.error("反射创建 更新域名解析对象失败: ",e);
+            logger.error("反射创建 更新域名解析对象失败: ", e);
         }
 
         logger.info("数据准备完成,开始更新...");
@@ -97,7 +97,7 @@ public class UpdateDomainListener implements JobListener{
 
         Boolean updateFlag = (Boolean) dataMap.get("updateFlag");
 
-        if (updateFlag){
+        if (updateFlag) {
             logger.info(" DDNS 更新成功...");
         } else {
             logger.info(" DDNS 更新失败,请查看日志...");
@@ -107,6 +107,8 @@ public class UpdateDomainListener implements JobListener{
     }
 
     public void jobWasExecuted(JobExecutionContext jobExecutionContext, JobExecutionException e) {
-        logger.error("DDNS 更新出现异常:",e);
+        if (e != null) {
+            logger.error("DDNS 更新出现异常:", e);
+        }
     }
 }

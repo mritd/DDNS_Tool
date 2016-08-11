@@ -2,10 +2,7 @@ package me.mritd.ddns.impl;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
-import com.aliyuncs.alidns.model.v20150109.DescribeSubDomainRecordsRequest;
-import com.aliyuncs.alidns.model.v20150109.DescribeSubDomainRecordsResponse;
-import com.aliyuncs.alidns.model.v20150109.UpdateDomainRecordRequest;
-import com.aliyuncs.alidns.model.v20150109.UpdateDomainRecordResponse;
+import com.aliyuncs.alidns.model.v20150109.*;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.FormatType;
@@ -42,11 +39,11 @@ public class AliyunUpdateDomainRecord implements UpdateDomainRecord {
 
         logger.info("创建域名解析请求...");
 
-        DescribeSubDomainRecordsRequest request = new DescribeSubDomainRecordsRequest();
-        DescribeSubDomainRecordsResponse response;
+        DescribeDomainRecordsRequest request = new DescribeDomainRecordsRequest();
+        DescribeDomainRecordsResponse response ;
+        request.setDomainName(domain);
         request.setProtocol(ProtocolType.HTTPS); //指定访问协议
         request.setAcceptFormat(FormatType.JSON); //指定api返回格式
-        request.setSubDomain(domain);
         request.setMethod(MethodType.POST); //指定请求方法
 
         logger.info("创建域名解析更新请求...");
@@ -62,8 +59,8 @@ public class AliyunUpdateDomainRecord implements UpdateDomainRecord {
         try {
             logger.info("查询域名解析状态...");
             response = client.getAcsResponse(request);
-            List<DescribeSubDomainRecordsResponse.Record> records = response.getDomainRecords();
-            for (DescribeSubDomainRecordsResponse.Record record : records) {
+            List<DescribeDomainRecordsResponse.Record> records = response.getDomainRecords();
+            for (DescribeDomainRecordsResponse.Record record : records) {
 
                 logger.info("当前域名解析 IP 为: " + record.getValue());
                 logger.info("当前本地 IP 为: " + ip);

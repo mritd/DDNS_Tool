@@ -16,18 +16,19 @@ public class PropertiesUtil {
 
     private static String confPath="dns.properties";
     private static Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
+    private static Properties properties;
 
 
     public static Properties loadConfig() {
 
         File configFile = new File(confPath);
-        Properties properties = new Properties();
+        Properties loadProperties = new Properties();
         InputStream is = null;
 
 
         try {
             is = new FileInputStream(configFile);
-            properties.load(is);
+            loadProperties.load(is);
         } catch (FileNotFoundException e) {
             logger.error("FileNotFoundException: ",e);
         } catch (IOException e) {
@@ -42,7 +43,7 @@ public class PropertiesUtil {
             }
         }
 
-
+        properties = loadProperties;
         return properties;
     }
 
@@ -54,7 +55,7 @@ public class PropertiesUtil {
      */
     public static String getValue(String key){
 
-        return loadConfig().getProperty(key);
+        return properties.getProperty(key);
     }
 
 
