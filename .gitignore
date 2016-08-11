@@ -14,9 +14,6 @@
 hs_err_pid*
 
 .gitignore
-.idea/compiler.xml
-.idea/copyright/
-.idea/misc.xml
-.idea/workspace.xml
+.idea
 logs/
 target/
