@@ -30,6 +30,7 @@
 
               </pattern>
                -->
+            <charset>UTF-8</charset>
         </encoder>
     </appender>
 
@@ -39,6 +40,7 @@
 
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%class:%line] - %m%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -62,6 +64,7 @@
 
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%class:%line] - %m%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -89,6 +92,7 @@
 
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%class:%line] - %m%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -118,6 +122,7 @@
 
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%class:%line] - %m%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
 
         <!-- deny all events with a level below INFO, that is TRACE and DEBUG -->
