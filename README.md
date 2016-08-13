@@ -7,5 +7,6 @@
 **项目 `dist` 目录下存在编译完的可执行jar和样例配置文件,DDNS 解析记录更新周期由配置文件中
 的 `cron` 表达式决定，运行截图如下:**
 
+![DDNS_TOOL](http://cnd.mritd.me/markdown/DDNS_TOOL.png)
 
 
