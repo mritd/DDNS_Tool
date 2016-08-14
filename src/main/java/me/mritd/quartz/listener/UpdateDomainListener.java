@@ -31,7 +31,7 @@ public class UpdateDomainListener implements JobListener {
 
         JobDataMap dataMap = jobExecutionContext.getJobDetail().getJobDataMap();
 
-        logger.info("更新域名解析记录开始...");
+        logger.info("DDNS JOB EXEC...");
 
         logger.info("检查当前 IP ...");
 
@@ -69,14 +69,13 @@ public class UpdateDomainListener implements JobListener {
             }
         }
 
-        logger.info("当前 IP 为: " + myIP);
-        logger.info("获取域名服务商相关配置...");
+        logger.info("加载配置文件...");
 
         String configType = PropertiesUtil.getValue("useConfig");
-
         dataMap.put("myIP", myIP);
         dataMap.put("domainType", PropertiesUtil.getValue("domainType"));
         dataMap.put("domain", PropertiesUtil.getValue("domain"));
+        dataMap.put("RR",PropertiesUtil.getValue("RR"));
         dataMap.put("AccessKey", PropertiesUtil.getValue(configType + "_AccessKey"));
         dataMap.put("AccessKeySecret", PropertiesUtil.getValue(configType + "_AccessKeySecret"));
 
@@ -87,28 +86,26 @@ public class UpdateDomainListener implements JobListener {
             logger.error("反射创建 更新域名解析对象失败: ", e);
         }
 
-        logger.info("数据准备完成,开始更新...");
-
     }
 
     public void jobExecutionVetoed(JobExecutionContext jobExecutionContext) {
+
+
+    }
+
+    public void jobWasExecuted(JobExecutionContext jobExecutionContext, JobExecutionException e) {
+        if (e != null) {
+            logger.error("DDNS 更新出现异常:", e);
+        }
 
         JobDataMap dataMap = jobExecutionContext.getJobDetail().getJobDataMap();
 
         Boolean updateFlag = (Boolean) dataMap.get("updateFlag");
 
         if (updateFlag) {
-            logger.info(" DDNS 更新成功...");
+            logger.info("DDNS JOB 执行完毕...");
         } else {
-            logger.info(" DDNS 更新失败,请查看日志...");
-        }
-
-        logger.info("DDNS JOB 执行完毕...");
-    }
-
-    public void jobWasExecuted(JobExecutionContext jobExecutionContext, JobExecutionException e) {
-        if (e != null) {
-            logger.error("DDNS 更新出现异常:", e);
+            logger.info("DDNS JOB 执行失败,请查看日志...");
         }
     }
 }

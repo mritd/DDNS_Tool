@@ -21,6 +21,7 @@ public class UpdateDomainJob implements Job {
 
 
         String myIP = (String) dataMap.get("myIP");
+        String rr = (String) dataMap.get("RR");
         String domainType = (String) dataMap.get("domainType");
         String domainName = (String) dataMap.get("domain");
         String accessKey = (String) dataMap.get("AccessKey");
@@ -28,7 +29,7 @@ public class UpdateDomainJob implements Job {
 
         UpdateDomainRecord updateDomainRecord = (UpdateDomainRecord)dataMap.get("updateDomainRecord");
 
-        boolean updateFlag = updateDomainRecord.doUpdate(domainName,domainType,myIP,accessKey,accessKeySecret);
+        boolean updateFlag = updateDomainRecord.doUpdate(domainName,rr,domainType,myIP,accessKey,accessKeySecret);
 
         dataMap.put("updateFlag",updateFlag);
 

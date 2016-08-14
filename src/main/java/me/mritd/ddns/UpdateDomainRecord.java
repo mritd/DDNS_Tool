@@ -17,6 +17,6 @@ public interface UpdateDomainRecord {
      * @param accessKeySecret keySecret
      * @return boolean 更新结果
      */
-    boolean doUpdate(String domain, String type, String ip, String accessKey, String accessKeySecret);
+    boolean doUpdate(String domain, String pr,String type, String ip, String accessKey, String accessKeySecret);
 
 }

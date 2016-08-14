@@ -28,7 +28,7 @@ public class AliyunUpdateDomainRecord implements UpdateDomainRecord {
     private static final Logger logger = LoggerFactory.getLogger(AliyunUpdateDomainRecord.class);
 
     @Override
-    public boolean doUpdate(String domain, String type, String ip, String accessKey, String accessKeySecret) {
+    public boolean doUpdate(String domain,String rr, String type, String ip, String accessKey, String accessKeySecret) {
 
         // 阿里云 API 固定值
         String regionId = "cn-hangzhou";
@@ -42,9 +42,10 @@ public class AliyunUpdateDomainRecord implements UpdateDomainRecord {
         DescribeDomainRecordsRequest request = new DescribeDomainRecordsRequest();
         DescribeDomainRecordsResponse response ;
         request.setDomainName(domain);
-        request.setProtocol(ProtocolType.HTTPS); //指定访问协议
-        request.setAcceptFormat(FormatType.JSON); //指定api返回格式
-        request.setMethod(MethodType.POST); //指定请求方法
+        request.setProtocol(ProtocolType.HTTPS);        //指定访问协议
+        request.setAcceptFormat(FormatType.JSON);       //指定api返回格式
+        request.setMethod(MethodType.POST);             //指定请求方法
+        request.setRRKeyWord(rr);                       // 指定主机记录 按 %rr% 搜索
 
         logger.info("创建域名解析更新请求...");
 
@@ -53,7 +54,7 @@ public class AliyunUpdateDomainRecord implements UpdateDomainRecord {
         updateRequest.setProtocol(ProtocolType.HTTPS);
         updateRequest.setAcceptFormat(FormatType.JSON);
         updateRequest.setMethod(MethodType.POST);
-        updateRequest.setRR(domain);
+        updateRequest.setRR(rr);
         updateRequest.setType(type);
 
         try {
@@ -62,8 +63,11 @@ public class AliyunUpdateDomainRecord implements UpdateDomainRecord {
             List<DescribeDomainRecordsResponse.Record> records = response.getDomainRecords();
             for (DescribeDomainRecordsResponse.Record record : records) {
 
+                if (!rr.toLowerCase().equals(record.getRR().toLowerCase())) continue;
+
                 logger.info("当前域名解析 IP 为: " + record.getValue());
                 logger.info("当前本地 IP 为: " + ip);
+
                 if (!ip.equals(record.getValue())) {
                     logger.info("本地 IP 发生变动,即将更新域名解析!");
 
@@ -81,7 +85,7 @@ public class AliyunUpdateDomainRecord implements UpdateDomainRecord {
                     }
 
                 } else {
-                    logger.info("本地 IP 未发生变动...");
+                    logger.info("本地 IP 未发生变动,不执行更新...");
                     return true;
                 }
 
